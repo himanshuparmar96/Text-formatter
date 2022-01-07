@@ -1,0 +1,194 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+<style>
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  /*margin: 4px 2px;*/
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #4CAF50;
+}
+
+.button1:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button2 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #008CBA;
+}
+
+.button2:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+.button3 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #f44336;
+}
+
+.button3:hover {
+  background-color: #f44336;
+  color: white;
+}
+
+.button4 {
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+}
+
+.button4:hover {
+  background-color: #555555;
+  color: white;
+}
+b,h2{
+font-size:22px;
+color: #292f33 ;
+}
+body {
+  background-color: 
+}
+P{
+color: #F9D342;
+}
+</style>
+
+
+</head>
+<body>
+<div style="margin:-8px;padding:10px;">
+<b>CSV NewLine:This button will convert input values in 'X','Y','Z'... format(Note:each input should be in new line).</b><br/>
+<b>CSV Space: This button will also convert input values in 'X','Y','Z'... format(Note: each input should be with space i.e. 1 2 3...n).</b><br/>
+<b>Backflush Format:This button will convert xml(backflush) into required format...(Note: input should be xml file(backflush)).</b><br/>
+<b>Remove Duplicate:This button will give you unique value from list of values you given in the input.</b>	
+</div>
+<div style='display:flex;'>
+<h2 style='margin-left:500 px;'>Input</h2>
+<h2 style='margin-left: 750px;'>Output</h2>
+</div>
+<textarea style="margin: 0px;width: 500px;height: 361px;margin-right: 16px;border:solid 3px #7077db;border-radius:10px;resize:none;" id="main"></textarea>
+
+<button class='button button1' onclick="csv_newline()"; style="width:120;padding:20spx;height:90px; position:absolute; left:580px; top:180px; cursor: pointer;">CSV NewLine</button>
+<button class='button button2' onclick="csv_space()"; style="width:120;padding:20px;height:90px; position:absolute; left:580px; top:280px; cursor: pointer;">CSV Space</button>
+<!--<button class='button button3' onclick="XML()"; style="width:120;padding:20px;height:90px; position:absolute; left:580px; top:380px; cursor: pointer;">Remove Quanity Tag</button>-->
+<button class='button button3' onclick="XML()"; style="width:120;padding:20px;height:90px; position:absolute; left:580px; top:380px; cursor: pointer;">Backflush Format</button>
+<button class='button button4' onclick="removeDuplicate()"; style="width:120;padding:20px;height:90px; position:absolute; left:580px; top:480px; cursor: pointer;">Remove Duplicate</button>
+
+
+<textarea style="margin-left:268px;width: 500px;height: 361px;border:solid 3px #7077db;border-radius:10px;resize:none;" id="result"></textarea>
+
+</body>
+</html>
+
+<script>
+
+function update_comment()
+{
+
+var originalText = document.getElementById("main").value;
+
+var result = _.deburr( originalText)
+//var result = originalText.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+//var result = originalText.replace(new RegExp(/[\u0300-\u036f]/gi),"")
+console.log(result)
+document.getElementById("result").innerHTML=result;
+
+}
+
+
+function csv_newline(){
+var x = document.getElementById("main").value;
+
+let b=x.replace(/^\s+|\s+$/gm,'');
+console.log(x)
+let c=b.split("\n");
+//console.log(x);
+
+ c="'"+ c.join("','") + "'";
+//console.log(c);
+
+document.getElementById("result").innerHTML=c;
+}
+
+function csv_space(){
+var x = document.getElementById("main").value;
+
+var b=x.split(",").join("")
+var c=b.split(" ")
+//console.log(x);
+
+var b="'"+ c.join("','") + "'";
+//console.log(b);
+
+document.getElementById("result").innerHTML=b;
+}
+
+
+function removeDuplicate(){
+ 
+//var a = document.getElementById("main").value;    
+
+var a= document.getElementById('main').value.split('\n');
+//var result = a.replace(/^\s+|\s+$/gm,'');
+var b = [...new Set(a)];
+/*var d=[];
+var count=0;
+//a.forEach(seperateVal);
+
+    for (var i=0; i<a.length; i++)
+    {
+        for(var j=i+1;j<a.length;j++)
+        {
+        if(a[i]===a[j])
+        {
+            a.removeAll(j)
+        }
+        
+    }
+    }
+*/
+document.getElementById("result").innerHTML=b;
+   //console.log(b + result) 
+}
+
+function XML(){
+var xml = document.getElementById("main").value;
+
+const date = new Date().toLocaleDateString('es-CL');//.replace(/[^a-z0-9-]/g, '-');
+//console.log(date)
+
+let res1 = xml.replace(/<Quantity>(.+?)<\/Quantity>/gi, "<Quantity>0</Quantity>");
+let res2 = res1.replace(/<TimeStamp>(.+?)<\/TimeStamp>/gi, `<TimeStamp>${date}</TimeStamp>`);
+let res3 = res2.replace(/<EffectiveDate>(.+?)<\/EffectiveDate>/gi, `<EffectiveDate>${date}</EffectiveDate>`);
+let res4 = res3.replace(/<Remarks>(.+?)<\/Remarks>/gi, '<Remarks></Remarks>');
+//let res5 = res4.replace(/<Location>(.+?)<\/Location>/gi, '<Location>TRXTRAX</Location>');
+
+document.getElementById("result").innerHTML = res4;
+//console.log(date);
+
+//document.getElementById("result").innerHTML =res1;
+
+
+
+}
+
+</script>
